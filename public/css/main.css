@@ -1,0 +1,16 @@
+body {
+  background-color: #5CCCCC;
+}
+
+.container {
+ width: 300px;
+ margin: 100px auto;
+}
+
+.space {
+  width: 98px;
+  height: 98px;
+  border: 1px solid black;
+  float: left;
+  background-color: #009999;
+}
