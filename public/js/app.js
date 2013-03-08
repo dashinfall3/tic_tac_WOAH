@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
   game = {
-    id: $('.board').attr('id');
+    id: $('.board').attr('id'),
   }
 
   // when player clicks on space:
@@ -9,9 +9,9 @@ $(document).ready(function(){
   $('.space').on("click", function(){
     var space = $(this).attr('id'); 
     $.ajax({
-      url: '/game/' +game[id]+ '/update',
-      type: 'post'
-      data: {game_id: game[id], space: space},
+      url: '/game/' +game['id']+ '/update',
+      type: 'post',
+      data: {game_id: game['id'], space: space},
       dataType: 'json'
     }).done(function(serverResponse) {
       $('body').append('<h3> Nice move!!!! </h3>');

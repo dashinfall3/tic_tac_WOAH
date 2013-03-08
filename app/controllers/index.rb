@@ -30,7 +30,6 @@ get '/logout' do
 end
 
 
-
 get '/game/:game_id' do
   @game = Game.find(params[:game_id]) 
   erb :game
@@ -61,10 +60,10 @@ post '/game/:game_id/update' do
   space_location = params[:space]
   game = Game.find(params[:game_id])
   status = Player.find(session[:player_id]).id
-
-#update the correct space
+  #update the correct space
   space = game.spaces.find_by_space_location(space_location)
-  space = Space.update_attribute(:status => status)
+  space.update_attribute(:status, status)
+  "true"
 end
 
 post '/game/:game_id/status' do
