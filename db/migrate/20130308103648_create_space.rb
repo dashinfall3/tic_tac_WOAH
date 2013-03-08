@@ -4,6 +4,7 @@ class CreateSpace < ActiveRecord::Migration
       t.integer :game_id
       t.integer :space_location
       t.integer :status
+      t.integer :player_id
       t.timestamps
     end
   end

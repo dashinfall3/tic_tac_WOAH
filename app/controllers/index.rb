@@ -56,3 +56,32 @@ post '/game/new' do
     erb :arena
   end
 end
+
+post '/game/:game_id/update' do 
+  space_location = params[:space]
+  game = Game.find(params[:game_id])
+  status = Player.find(session[:player_id]).id
+
+#update the correct space
+  space = game.spaces.find_by_space_location(space_location)
+  space = Space.update_attribute(:status => status)
+end
+
+post '/game/:game_id/status' do
+  content_type :json
+  game = Game.find(params[:game_id])
+  latest_turn = game.spaces.order("created_at DESC").last
+  current_user = Player.find(session[:player_id])
+  if current_user == latest_turn.player
+    {:status => "No go"}.to_json
+  else
+    {:status => "wahoo"}.to_json
+  end
+end
+
+
+
+
+
+
+
