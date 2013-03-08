@@ -7,5 +7,5 @@ Arena
 
 <h2> here are all the games</h2>
 <% @games.each do |game|%>
-  <%= erb :game_chip, :locals => {:game => game} %>
+  <%= erb :_game_chip, :locals => {:game => game} %>
 <% end %>

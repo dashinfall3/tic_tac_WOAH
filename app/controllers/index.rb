@@ -5,7 +5,7 @@ end
 post '/login' do
   @player = Player.find_by_email(params[:email])
   if @player && @player.authenticate(params[:password])
-    session[:user_id] = @player.id
+    session[:player_id] = @player.id
     redirect "/arena"
   else
     @errors = "yo we got problems"
@@ -34,6 +34,12 @@ end
 get '/game/:game_id' do
   @game = Game.find(params[:game_id]) 
   erb :game
+end
+
+post '/game/:game_id/join' do 
+  @game = Game.find(params[:game_id])
+  @game.players << Player.find(session[:player_id])
+  redirect "/game/#{@game.id}"
 end
 
 get '/arena' do 
