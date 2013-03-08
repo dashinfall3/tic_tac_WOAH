@@ -1,8 +1,11 @@
 Arena 
 
-here are all the games
-
-
+<h2> Create game </h2>
 <form action='/game/new' method="post">
-  <input type="submit" value="submit">
+  <input type="submit" value="create game">
 </form>
+
+<h2> here are all the games</h2>
+<% @games.each do |game|%>
+  <%= erb :game_chip, :locals => {:game => game} %>
+<% end %>
