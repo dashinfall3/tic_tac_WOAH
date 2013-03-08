@@ -2,25 +2,34 @@ get '/' do
   erb :index
 end
 
-post 'login' do
-  session[:user_id] == User.authenticate(params[:email], params[:password])
-  if session[:user_id]
-    redirect "/games/#{session[:user_id]}"
+post '/login' do
+  @player = Player.find_by_email(params[:email])
+  if @player && @player.authenticate(params[:password])
+    session[:user_id] = @player.id
+    redirect "/arena"
   else
+    @errors = "yo we got problems"
     erb :index
   end
 end
 
 post '/signup' do
-  player = Player.new(params)
-  session[:user_id] = player.authenticate(params[:email], params[:password])
-
-  if player.save
+  @player = Player.new(params)
+  if @player.save
+    session[:player_id] = @player.id
     redirect '/arena'
   else
-    erb :signup
+    erb :index
   end
 end
+
+
+get '/logout' do 
+  session.clear
+  redirect '/'
+end
+
+
 
 get '/game/:game_id' do
   @game = Game.find(params[:game_id]) 
@@ -34,7 +43,6 @@ end
 
 post '/game/new' do
   game = Game.new(params)
-  # in before create create all the spaces for this game
   if game.save
     game.generate_spaces
     redirect "/game/#{game.id}"
