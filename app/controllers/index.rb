@@ -59,22 +59,21 @@ end
 post '/game/:game_id/update' do 
   space_location = params[:space]
   game = Game.find(params[:game_id])
-  status = Player.find(session[:player_id]).id
+  status = Player.find(session[:player_id]).id #missing the X & O logic
   #update the correct space
   space = game.spaces.find_by_space_location(space_location)
-  space.update_attribute(:status, status)
-  "true"
+  space.update_attributes(:status => status, :player_id => current_player.id)
+  {mark: current_player.id}.to_json
 end
 
 post '/game/:game_id/status' do
   content_type :json
   game = Game.find(params[:game_id])
-  latest_turn = game.spaces.order("created_at DESC").last
-  current_user = Player.find(session[:player_id])
-  if current_user == latest_turn.player
+  if current_player == game.latest_player #method to check for turn. 
     {:status => "No go"}.to_json
   else
-    {:status => "wahoo"}.to_json
+    # board_as_string = erb :_board, :layout => false, :locals => {:game => game}
+    {:status => "wahoo", :space => game.latest_space, :mark => game.latest_player.id}.to_json
   end
 end
 

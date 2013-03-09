@@ -1,37 +1,53 @@
 $(document).ready(function(){
 
-  game = {
-    id: $('.board').attr('id'),
-  }
+game = {
 
-  // when player clicks on space:
-  // - ajax post to update the game
-  $('.space').on("click", function(){
-    var space = $(this).attr('id'); 
+  id: $('.board').attr('id'),
+  board: $('.board'),
+
+  updateSpace: function() {
+    $('.space').on("click", function(){
+      var space_id = $(this).attr('id');
+      if (!game.board.hasClass('disabled')) {
+        $.ajax({
+          url: '/game/' +game['id']+ '/update',
+          type: 'post',
+          data: {game_id: game['id'], space: space_id},
+          dataType: 'json'
+        }).done(function(data) {
+          game.board.addClass('disabled');
+          $('body').append('<h3> Nice move!!!! </h3>');
+          $('#'+space_id).html(data.mark);
+          //window.setInterval(game.checkStatus, 2000);
+          $
+        })
+      }
+      
+    });
+  },
+
+  checkStatus: function(){
     $.ajax({
-      url: '/game/' +game['id']+ '/update',
+      url: '/game/' +game['id']+ '/status',
       type: 'post',
-      data: {game_id: game['id'], space: space},
       dataType: 'json'
-    }).done(function(serverResponse) {
-      $('body').append('<h3> Nice move!!!! </h3>');
-      // disable board
-    })
-  });
+    }).done(function(data) {
+      if (data['status'] === 'wahoo') {
+          game.board.removeClass('disabled');
+          $('#'+data.space).html(data.mark);
+      }
+
+    });
+  },
+
+}
 
 
-
-  // check every second if it's my turn
-  //   $.ajax({
-  //     url: '/game/' +game[id]+ '/check_status',
-  //     type: 'get'
-  //     dataType: 'json'
-  //   }).done(function(serverResponse) {
-  //     if true, re-enable board
-  //   })
-  // });
-
-
+window.setInterval(game.checkStatus, 2000);
+game.updateSpace();
 
 });
 
+// TODO: add class marked to spaces 
+
+  
